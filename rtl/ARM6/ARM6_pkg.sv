@@ -660,6 +660,8 @@ package ARM6_PKG;
 		// Immediate LSR/ASR encoded zero and RRX are not zero-count operations.
 		if (sa == 8'h00 && (!t[2] || t[1:0] == 2'b00))
 			return {ci,val};
+		// Logical register shifts greater than 32 discard every bit, including carry.
+		if (!t[2] && !t[1] && sa > 8'd32) return 33'd0;
 		return rrx ? {val[0],ci,val[31:1]} : {dir?cr5:cl5,tmp5};
 	endfunction
 	
